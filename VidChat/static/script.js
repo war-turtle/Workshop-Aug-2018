@@ -14,6 +14,8 @@ const configuration = {
 
 let room;
 let pc;
+let closeBtn = document.querySelector('#closeConnection');
+closeBtn.disabled = true;
 
 function onSuccess() { }
 function onError(error) {
@@ -35,6 +37,7 @@ drone.on("open", error => {
     room.on("members", members => {
         console.log("MEMBERS", members);
         // If we are the second user to connect to the room we will be creating the offer
+
         const isOfferer = members.length === 2;
         startWebRTC(isOfferer);
     });
@@ -96,6 +99,9 @@ function startWebRTC(isOfferer) {
         }
 
         if (message.sdp) {
+            closeBtn.disabled = false;
+            closeBtn.innerHTML = 'Disconnect From User';
+            closeBtn.className = 'btn btn-danger btn-lg';
             // This is called after receiving an offer or answer from another peer
             pc.setRemoteDescription(
                 new RTCSessionDescription(message.sdp),
@@ -110,6 +116,7 @@ function startWebRTC(isOfferer) {
                 onError
             );
         } else if (message.candidate) {
+            console.log("how are you");
             // Add the new ICE candidate to our connections remote description
             pc.addIceCandidate(
                 new RTCIceCandidate(message.candidate),
@@ -121,6 +128,7 @@ function startWebRTC(isOfferer) {
 
     document.querySelector("#closeConnection").addEventListener("click", function () {
         console.log("connection closed bitches");
+        closeBtn.disabled = true;
         pc.close();
     });
 }
