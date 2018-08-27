@@ -42,8 +42,9 @@
         crossorigin="anonymous"></script>
 
     <script>
+        console.log(window.location);
         document.querySelector('#connectToScaleDrone').addEventListener('click', function () {
-            window.location.href = "/VidChat";
+            window.location.href += "/VidChat";
         });
     </script>
 </body>
